@@ -6,7 +6,7 @@ export function SiteHeader() {
     { to: "/agenda", label: "Eventos" },
     { to: "/mapa", label: "Mapa" },
     { to: "/tienda", label: "Tienda" },
-    { to: "/perfil", label: "Comunidad" },
+    { to: "/comunidad", label: "Comunidad" },
   ];
   return (
     <header className="sticky top-0 z-40 bg-paper border-b-[3px] border-ink">
