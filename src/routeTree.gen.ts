@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TiendaRouteImport } from './routes/tienda'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as ComunidadRouteImport } from './routes/comunidad'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
@@ -29,6 +30,11 @@ const PerfilRoute = PerfilRouteImport.update({
 const MapaRoute = MapaRouteImport.update({
   id: '/mapa',
   path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadRoute = ComunidadRouteImport.update({
+  id: '/comunidad',
+  path: '/comunidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
   '/tienda': typeof TiendaRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
   '/tienda': typeof TiendaRoute
@@ -68,22 +76,39 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
   '/tienda': typeof TiendaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agenda' | '/auth' | '/mapa' | '/perfil' | '/tienda'
+  fullPaths:
+    | '/'
+    | '/agenda'
+    | '/auth'
+    | '/comunidad'
+    | '/mapa'
+    | '/perfil'
+    | '/tienda'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agenda' | '/auth' | '/mapa' | '/perfil' | '/tienda'
-  id: '__root__' | '/' | '/agenda' | '/auth' | '/mapa' | '/perfil' | '/tienda'
+  to: '/' | '/agenda' | '/auth' | '/comunidad' | '/mapa' | '/perfil' | '/tienda'
+  id:
+    | '__root__'
+    | '/'
+    | '/agenda'
+    | '/auth'
+    | '/comunidad'
+    | '/mapa'
+    | '/perfil'
+    | '/tienda'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgendaRoute: typeof AgendaRoute
   AuthRoute: typeof AuthRoute
+  ComunidadRoute: typeof ComunidadRoute
   MapaRoute: typeof MapaRoute
   PerfilRoute: typeof PerfilRoute
   TiendaRoute: typeof TiendaRoute
@@ -110,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/mapa'
       fullPath: '/mapa'
       preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidad': {
+      id: '/comunidad'
+      path: '/comunidad'
+      fullPath: '/comunidad'
+      preLoaderRoute: typeof ComunidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -140,6 +172,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgendaRoute: AgendaRoute,
   AuthRoute: AuthRoute,
+  ComunidadRoute: ComunidadRoute,
   MapaRoute: MapaRoute,
   PerfilRoute: PerfilRoute,
   TiendaRoute: TiendaRoute,
