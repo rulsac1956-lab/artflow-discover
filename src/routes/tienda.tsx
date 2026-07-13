@@ -9,13 +9,21 @@ export const Route = createFileRoute("/tienda")({
 });
 
 const tabs = ["Obras", "Entradas", "Merch"] as const;
+const categorias = ["Todo", "Música", "Pintura", "Escultura", "Teatro", "Cine", "Dibujo", "Tallado"] as const;
+type Categoria = (typeof categorias)[number];
 
-const items = {
+type Item = { titulo: string; desc: string; artista: string; precio: string; categoria?: Exclude<Categoria, "Todo"> };
+
+const items: Record<(typeof tabs)[number], Item[]> = {
   Obras: [
-    { titulo: "Obra A", desc: "Acuarela sobre papel.", artista: "Elena V.", precio: "$120" },
-    { titulo: "Obra B", desc: "Óleo sobre lienzo.", artista: "Marco R.", precio: "$240" },
-    { titulo: "Obra C", desc: "Tinta y grafito.", artista: "Lía S.", precio: "$85" },
-    { titulo: "Obra D", desc: "Collage mixto.", artista: "Bruno P.", precio: "$160" },
+    { titulo: "Atardecer urbano", desc: "Acuarela sobre papel.", artista: "Elena V.", precio: "$120", categoria: "Pintura" },
+    { titulo: "Retrato en grafito", desc: "Dibujo realista.", artista: "Emilio", precio: "$95", categoria: "Dibujo" },
+    { titulo: "Fragmento II", desc: "Escultura en cerámica.", artista: "Sara M.", precio: "$260", categoria: "Escultura" },
+    { titulo: "Máscara ritual", desc: "Tallado en madera.", artista: "Bruno P.", precio: "$180", categoria: "Tallado" },
+    { titulo: "Disco: Raíces", desc: "Álbum en vinilo.", artista: "Trío Mariscal", precio: "$28", categoria: "Música" },
+    { titulo: "Cortometraje: Nube", desc: "Descarga digital 4K.", artista: "Cía. Nova", precio: "$8", categoria: "Cine" },
+    { titulo: "Guion: La casa", desc: "Obra de teatro publicada.", artista: "Cía. Nova", precio: "$14", categoria: "Teatro" },
+    { titulo: "Trazos del viento", desc: "Tinta china sobre papel.", artista: "Lía S.", precio: "$85", categoria: "Dibujo" },
   ],
   Entradas: [
     { titulo: "Noche de jazz", desc: "Concierto · 12 Oct.", artista: "Trío Mariscal", precio: "$12" },
@@ -33,7 +41,12 @@ const items = {
 
 function TiendaPage() {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Obras");
+  const [cat, setCat] = useState<Categoria>("Todo");
   const [cart, setCart] = useState(0);
+
+  const lista = items[tab].filter((it) =>
+    tab === "Obras" && cat !== "Todo" ? it.categoria === cat : true
+  );
 
   return (
     <div className="min-h-screen bg-paper">
@@ -54,7 +67,7 @@ function TiendaPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-3 mb-6">
           {tabs.map((t) => (
             <button
               key={t}
@@ -66,8 +79,25 @@ function TiendaPage() {
           ))}
         </div>
 
+        {tab === "Obras" && (
+          <div className="mb-8">
+            <p className="font-hand text-xl mb-2">Filtrar por tipo de arte</p>
+            <div className="flex flex-wrap gap-2">
+              {categorias.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCat(c)}
+                  className={`sketch-border-sm font-hand text-lg px-4 py-1 ${cat === c ? "bg-ink text-paper" : "bg-white"}`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items[tab].map((it) => (
+          {lista.map((it) => (
             <article key={it.titulo} className="sketch-border bg-white overflow-hidden flex flex-col">
               <div className="aspect-square bg-accent/60 grid place-items-center border-b-[3px] border-ink">
                 <PaintingIcon />
@@ -76,6 +106,11 @@ function TiendaPage() {
                 <h3 className="font-hand text-2xl">{it.titulo}</h3>
                 <p className="text-ink/80 text-sm">{it.desc}</p>
                 <p className="text-ink/70 text-sm font-hand text-lg mt-1">Artista: {it.artista}</p>
+                {it.categoria && (
+                  <span className="mt-1 inline-block w-fit sketch-border-sm bg-accent/60 px-2 py-0.5 text-xs font-hand">
+                    {it.categoria}
+                  </span>
+                )}
                 <p className="font-hand text-2xl mt-2">{it.precio}</p>
                 <div className="mt-3 flex gap-2">
                   <button
@@ -91,6 +126,11 @@ function TiendaPage() {
               </div>
             </article>
           ))}
+          {lista.length === 0 && (
+            <p className="col-span-full sketch-border bg-white p-8 text-center font-hand text-2xl text-ink/70">
+              No hay obras en esta categoría todavía.
+            </p>
+          )}
         </div>
       </main>
     </div>
