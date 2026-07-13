@@ -23,23 +23,22 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-          cache: npm
+          bun-version: latest
 
       - name: Instalar dependencias
-        run: npm install
+        run: bun install
 
       - name: Construir proyecto
-        run: npm run build
+        run: bun run build
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Subir archivos compilados
-        uses: actions/upload-pages-artifact@v3
+      - name: Subir sitio compilado
+        uses: actions/upload-pages-artifact@v4
         with:
           path: .output/public
 
