@@ -31,8 +31,10 @@ jobs:
       - name: Instalar dependencias
         run: bun install
 
-      - name: Construir proyecto
+      - name: Construir proyecto para GitHub Pages
         run: bun run build
+        env:
+          NITRO_PRESET: github_pages
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
